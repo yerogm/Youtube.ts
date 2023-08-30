@@ -1,31 +1,91 @@
 .contenedorPrincipal {
-    padding-left: 100px;
-    .video {
-        border-radius: 15px;
-    }
-    iframe {
+    display: flex;
+    // gap: 10px;
+    .contenedorPerfil {
+        padding-left: 100px;
         width: 100%;
-        max-width: 928px;
-        border: none;
+
+        .video {
+            border-radius: 15px;
+        }
+        iframe {
+            width: 100%;
+            max-width: 928px;
+            border: none;
+            object-fit: cover;
+        }
+        img {
+            border-radius: 17px;
+        }
+        .contenedorUsuario {
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            max-width: 700px;
+        }
+        .likes {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            background-color: #2c2b2b;
+            padding: 0px 10px;
+            border-radius: 15px;
+            margin-left: auto;
+        }
     }
-    img {
-        border-radius: 17px;
+    .contenedorSugerencias {
+        width: 100%;
+
+        img {
+            width: 100%;
+            max-width: 168px;
+            max-height: 94px;
+            // object-fit: contain;
+        }
+        .descriptionVideo {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            // width: 100%;
+            // padding: 16px;
+
+            // border-radius: 8px;
+            // box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+
+            .btnEliminar {
+                margin-left: auto;
+                color: #686161;
+                cursor: pointer;
+                background: none;
+                border: none;
+                font-size: 17px;
+
+                &:hover {
+                    background-color: rgb(81, 78, 78);
+                    color: #bcbcbc;
+                    border-radius: 30px;
+                    padding: 4px 10px;
+                    transition: all 0.2s;
+                }
+            }
+
+            .imgPortada {
+                border-radius: 8px;
+                max-width: 100%;
+                height: 100%;
+            }
+            .nameAndDate {
+                font-size: 14px;
+                color: #888888;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 8px;
+            }
+        }
     }
-    .contenedorUsuario {
+    .sugerencias {
         display: flex;
         flex-direction: column;
-        margin: 0;
-        max-width: 700px;
-        
-    }
-    .likes {
-        display: flex;
-        align-items: center;
-        gap: 50px;
-        background-color: #2c2b2b;
-        padding: 0px 10px;
-        border-radius: 15px;
-        margin-left: auto;
-        
     }
 }

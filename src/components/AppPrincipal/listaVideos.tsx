@@ -5,9 +5,10 @@ import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import moment from "moment";
 import "moment/locale/es";
 import { Link } from "react-router-dom";
+import VideosParametros from "./videosParametros";
 moment.locale("es");
 
-export interface listaVideo {
+export interface VideoYoutube {
     name: string;
     ImgUsuario: string;
     description: string;
@@ -22,44 +23,21 @@ export interface listaVideo {
 
 const ListaVideos = () => {
     moment.locale("es");
+
+    const [video, setVideo] = useState<VideoYoutube[]>([]);
     const youtubeCollection = collection(db, "listaVideos");
 
-    const [video, setVideo] = useState<listaVideo[]>([]);
-    const [videos, setVideos] = useState([]);
-    const [buscador, setVideoFiltro] = useState("");
+    const [buscador, setBuscador] = useState("");
 
-    const obtenerYoutube = async () => {
-        const data = await getDocs(youtubeCollection);
-        const values = data.docs.map((doc) => ({
-            ...(doc.data() as listaVideo),
-            id: doc.id,
-        }));
-
-        setVideo(values);
-    };
-    console.log(youtubeCollection);
-
-    useEffect(() => {
-        obtenerYoutube();
-    }, []);
-
-    const eliminarVideo = (id: string) => {
-        const YouTubeDoc = doc(db, "listaVideos", id);
-        deleteDoc(YouTubeDoc);
-
-        if (window.confirm("estas seguro de querer eliminar este video")) {
-            console.log(id);
-        }
-        obtenerYoutube();
-    };
     useEffect(() => {
         if (buscador.length > 0) {
             console.log("DEBEERIA FILTRAR: ", buscador);
             let buscar = buscador.toUpperCase();
             setVideo(
                 video.filter(
-                    (x: listaVideo) =>
-                        (x.description && x.description.toUpperCase().includes(buscar)) ||
+                    (x: VideoYoutube) =>
+                        (x.description &&
+                            x.description.toUpperCase().includes(buscar)) ||
                         (x.categoria &&
                             x.categoria.toUpperCase().includes(buscar))
                 )
@@ -68,6 +46,18 @@ const ListaVideos = () => {
             setVideo(video);
         }
     }, [buscador, video]);
+    const obtenerYoutube = async () => {
+        const data = await getDocs(youtubeCollection);
+        const values = data.docs.map((doc) => ({
+            ...(doc.data() as VideoYoutube),
+            id: doc.id,
+        }));
+
+        setVideo(values);
+    };
+    useEffect(() => {
+        obtenerYoutube();
+    }, []);
 
     return (
         <div className="contenedor">
@@ -85,7 +75,7 @@ const ListaVideos = () => {
                         type="text"
                         placeholder="Buscar"
                         onChange={(e) => {
-                            setVideoFiltro(e.target.value);
+                            setBuscador(e.target.value);
                         }}
                     />
 
@@ -113,57 +103,7 @@ const ListaVideos = () => {
                     />
                 </Link>
             </div>
-            <div className="listaVideos">
-                {video.map((videoItem) => (
-                    <div>
-                        <div>
-                            <Link to={"/perfilVideo/" + videoItem.id}>
-                                <img
-                                    src={videoItem.ImgPortada}
-                                    alt=""
-                                    className="imgPortada"
-                                    style={{
-                                        borderRadius: "15px",
-                                        width: "100%",
-                                    }}
-                                />
-                            </Link>
-
-                            <div className="descriptionVideo">
-                                <img
-                                    src={videoItem.ImgUsuario}
-                                    alt=""
-                                    height="36px"
-                                    width="36px"
-                                />
-                                <h3>{videoItem.description}</h3>
-                                <button
-                                    onClick={() => eliminarVideo(videoItem.id)}
-                                    className="btnEliminar"
-                                >
-                                    X
-                                </button>
-                            </div>
-
-                            <div style={{ margin: "0", marginLeft: "50px" }}>
-                                <p
-                                    style={{
-                                        font: "14px Roboto, Arial, sans-serif",
-                                        color: "#AAAAAA",
-                                    }}
-                                >
-                                    {videoItem.name}
-                                </p>
-                                <p className="fecha">
-                                    {moment(videoItem.fecha)
-                                        .locale("es")
-                                        .fromNow()}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
+            <VideosParametros videos={video} />
         </div>
     );
 };

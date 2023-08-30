@@ -1,46 +1,46 @@
+import { faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    CollectionReference,
     collection,
     doc,
     getDocs,
+    query,
     updateDoc,
+    where,
 } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
-import { db } from "../firebaseConfig/firebase";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { VideoYoutube } from "../AppPrincipal/listaVideos";
+import VideosParametros from "../AppPrincipal/videosParametros";
+import { db } from "../firebaseConfig/firebase";
 import "./styles.scss";
-import { faThumbsUp, faThumbsDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-export interface listaVideo {
-    name: string;
-    ImgUsuario: string;
-    description: string;
-    Video: string;
-    ImgPortada: string;
-    fecha: Date | string;
-    id: string;
-    likes: number;
-    disLikes: number;
-    categoria: string;
-}
+import PerfilParametros from "./PerfilParametros";
 
 const PerfilVideo = () => {
-    const youtubeCollection: any = collection(db, "listaVideos");
+    const youtubeCollection = collection(db, "listaVideos");
 
     const params = useParams();
-    const [video, setVideo] = useState<listaVideo>();
+    const [video, setVideo] = useState<VideoYoutube>();
+    const [videoArray, setVideoArray] = useState<VideoYoutube[]>([]);
     const [videoFiltro] = useState("");
 
     const obtenerYoutube = async () => {
-        const data = await getDocs(youtubeCollection);
+        const videosFiltrados = await query(
+            youtubeCollection,
+            where("id", "==", params.id)
+        );
+
+        const data = await getDocs(videosFiltrados);
         const values = data.docs.map((doc) => ({
-            ...(doc.data() as listaVideo),
+            ...(doc.data() as VideoYoutube),
             id: doc.id,
         }));
 
         values.map((video) => {
-            if (video.id === params.id) return setVideo(video);
+            if (video.id === params.id) {
+                videoCategoria(video.categoria);
+                return setVideo(video);
+            }
             return undefined;
         });
     };
@@ -68,10 +68,20 @@ const PerfilVideo = () => {
         }
     };
 
-    const videoCategoria = async () => {
+    const videoCategoria = async (categoriaId: string) => {
         try {
-            const categoriaId = video?.categoria
-            const encontrarCategoria = await youtubeCollection.where("categoria", "==", categoriaId);
+            const videosFiltrados = await query(
+                youtubeCollection,
+                where("categoria", "==", categoriaId)
+            );
+
+            const data = await getDocs(videosFiltrados);
+            const values = data.docs.map((doc) => ({
+                ...(doc.data() as VideoYoutube),
+                id: doc.id,
+            }));
+
+            setVideoArray(values);
         } catch {}
     };
 
@@ -115,76 +125,78 @@ const PerfilVideo = () => {
             </div>
             {video && (
                 <div className="contenedorPrincipal">
-                    <iframe
-                        src={video.Video.replace("watch?v=", "embed/")}
-                        title="video"
-                        className="video"
-                        width="938px"
-                        height="528px"
-                        allowFullScreen
-                    />
-                    <div className="contenedorUsuario">
-                        <h3>{video.description}</h3>
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "10px",
-                            }}
-                        >
-                            <img
-                                src={video.ImgUsuario}
-                                height="36px"
-                                width="36px"
-                                alt=""
-                            />
-                            <h4>{video.name}</h4>
-                            <div className="likes">
-                                <p
-                                    style={{
-                                        fontSize: "20px",
-                                        display: "flex",
-                                        gap: "10px",
-                                    }}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={faThumbsUp}
+                    <div className="contenedorPerfil">
+                        <iframe
+                            src={video.Video.replace("watch?v=", "embed/")}
+                            title="video"
+                            className="video"
+                            width="938px"
+                            height="528px"
+                            allowFullScreen
+                        />
+                        <div className="contenedorUsuario">
+                            <h3>{video.description}</h3>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "10px",
+                                }}
+                            >
+                                <img
+                                    src={video.ImgUsuario}
+                                    height="36px"
+                                    width="36px"
+                                    alt=""
+                                />
+                                <h4>{video.name}</h4>
+                                <div className="likes">
+                                    <p
                                         style={{
-                                            color:
-                                                video.likes > 0
-                                                    ? "white"
-                                                    : "#4f4d4d",
                                             fontSize: "20px",
-                                            cursor: "pointer",
+                                            display: "flex",
+                                            gap: "10px",
                                         }}
-                                        title="Me gusta este video"
-                                        onClick={() => AddLike(1)}
-                                    />
-                                    <span>{video.likes}</span>
-                                </p>
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faThumbsUp}
+                                            style={{
+                                                color:
+                                                    video.likes > 0
+                                                        ? "white"
+                                                        : "#4f4d4d",
+                                                fontSize: "20px",
+                                                cursor: "pointer",
+                                            }}
+                                            title="Me gusta este video"
+                                            onClick={() => AddLike(1)}
+                                        />
+                                        <span>{video.likes}</span>
+                                    </p>
 
-                                {/* </div>
+                                    {/* </div>
                             <div className="likes"> */}
-                                <p style={{ fontSize: "20px" }}>
-                                    <FontAwesomeIcon
-                                        icon={faThumbsDown}
-                                        style={{
-                                            color:
-                                                video.disLikes < 0
-                                                    ? "white"
-                                                    : "#4f4d4d",
-                                            fontSize: "20px",
-                                            cursor: "pointer",
-                                        }}
-                                        onClick={() => AddDisLike(1)}
-                                        title="No me gusta este video"
-                                    />
-                                </p>
+                                    <p style={{ fontSize: "20px" }}>
+                                        <FontAwesomeIcon
+                                            icon={faThumbsDown}
+                                            style={{
+                                                color:
+                                                    video.disLikes < 0
+                                                        ? "white"
+                                                        : "#4f4d4d",
+                                                fontSize: "20px",
+                                                cursor: "pointer",
+                                            }}
+                                            onClick={() => AddDisLike(1)}
+                                            title="No me gusta este video"
+                                        />
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <h1>categoria: {video.categoria}</h1>
+                    <div className="sugerencias">
+                        <PerfilParametros videos={videoArray} />
                     </div>
                 </div>
             )}

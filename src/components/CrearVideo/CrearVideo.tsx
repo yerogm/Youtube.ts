@@ -3,22 +3,10 @@ import React, { useEffect, useState } from "react";
 import { db } from "../firebaseConfig/firebase";
 import "./styles.scss";
 import moment from "moment";
-
-export interface listaVideo {
-    id: string;
-    name: string;
-    ImgUsuario: string;
-    description: string;
-    Video: string;
-    ImgPortada: string;
-    fecha: string;
-    likes: number;
-    disLikes: number;
-    categoria: string;
-}
+import { VideoYoutube } from "../AppPrincipal/listaVideos";
 
 const CrearVideo = () => {
-    const [newVideo, setNewVideo] = useState<listaVideo>({
+    const [newVideo, setNewVideo] = useState<VideoYoutube>({
         name: "",
         ImgUsuario: "",
         description: "",
@@ -32,11 +20,11 @@ const CrearVideo = () => {
     });
     const youtubeCollection = collection(db, "listaVideos");
 
-    const [video, setVideo] = useState<listaVideo[]>([]);
+    const [video, setVideo] = useState<VideoYoutube[]>([]);
     const obtenerYoutube = async () => {
         const data = await getDocs(youtubeCollection);
         const values = data.docs.map((doc) => ({
-            ...(doc.data() as listaVideo),
+            ...(doc.data() as VideoYoutube),
             id: doc.id,
         }));
 
@@ -60,7 +48,6 @@ const CrearVideo = () => {
         obtenerYoutube();
     };
 
-    
     return (
         <div className="contenedorFormulario">
             <div>

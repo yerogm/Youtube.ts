@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ListaVideos from "./components/AppPrincipal/listaVideos";
-import CrearVideo, { listaVideo } from "./components/CrearVideo/CrearVideo";
+import CrearVideo from "./components/CrearVideo/CrearVideo";
 import PerfilVideo from "./components/PerfilVideo/PerfilVideo";
 
 function App() {
@@ -10,6 +9,7 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<ListaVideos />} />
+
                     <Route path="/crearVideo" element={<CrearVideo />} />
                     <Route path="/perfilVideo/:id" element={<PerfilVideo />} />
                 </Routes>
