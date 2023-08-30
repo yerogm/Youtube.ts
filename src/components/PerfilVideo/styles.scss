@@ -1,0 +1,31 @@
+.contenedorPrincipal {
+    padding-left: 100px;
+    .video {
+        border-radius: 15px;
+    }
+    iframe {
+        width: 100%;
+        max-width: 928px;
+        border: none;
+    }
+    img {
+        border-radius: 17px;
+    }
+    .contenedorUsuario {
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        max-width: 700px;
+        
+    }
+    .likes {
+        display: flex;
+        align-items: center;
+        gap: 50px;
+        background-color: #2c2b2b;
+        padding: 0px 10px;
+        border-radius: 15px;
+        margin-left: auto;
+        
+    }
+}

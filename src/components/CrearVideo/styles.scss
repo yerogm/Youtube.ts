@@ -1,0 +1,21 @@
+.contenedorFormulario {
+    .inputFormulario {
+        background-color: transparent;
+        border: solid 1px rgb(44, 44, 44);
+        width: 100%;
+        padding: 10px 9px;
+        border-radius: 15px;
+        margin-top: 20px;
+        color: white;
+        max-width: 1000px;
+    }
+    .btn-crear {
+        color: white;
+        background-color: rgb(41, 41, 217);
+        border: none;
+        padding: 7px 14px;
+        border-radius: 15px;
+        margin-top: 30px;
+        cursor: pointer;
+    }
+}

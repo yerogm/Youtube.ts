@@ -1,0 +1,98 @@
+body {
+    background-color: black;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    .contenedor {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+
+        .divBarraPrincipal {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background-color: black;
+
+            .buscador {
+                display: flex;
+                align-items: center;
+                border: 1px solid rgb(69, 66, 66);
+                border-radius: 20px;
+                width: 100%;
+                max-width: 500px;
+                justify-content: space-between;
+                // padding: 0px 0px;
+
+                button {
+                    cursor: pointer;
+                    background: #77767665;
+                    border: none;
+                    border-top-right-radius: 20px;
+                    border-bottom-right-radius: 20px;
+
+                    img {
+                        object-fit: contain;
+                    }
+                }
+                input {
+                    padding: 10px 9px;
+                    width: 100%;
+                    border: none;
+                    background-color: transparent;
+                }
+            }
+        }
+    }
+
+    input {
+        color: white;
+    }
+    .listaVideos {
+        display: grid;
+        gap: 30px;
+        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+        align-items: center;
+        padding: 10px;
+        text-decoration: none;
+        color: white;
+
+        // img {
+        //     border-radius: 15px;
+        //     width: 100%;
+        // }
+
+        .descriptionVideo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+
+            img {
+                border-radius: 17px;
+            }
+
+            .btnEliminar {
+                margin-left: auto;
+                color: #686161;
+                cursor: pointer;
+                background: none;
+                border: none;
+                font-size: 17px;
+
+                &:hover {
+                    background-color: rgb(81, 78, 78);
+                    color: #bcbcbc;
+                    border-radius: 30px;
+                    padding: 4px 10px;
+                    transition: all 0.2s;
+                }
+            }
+        }
+
+        .fecha {
+            color: #aaaaaa;
+        }
+    }
+}
